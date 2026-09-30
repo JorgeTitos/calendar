@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import type { Config } from '../config';
+import { LIMITS } from '../lib/booking';
 import { formatShortDate, formatTime, type Locale, type Strings } from '../lib/i18n';
 import { zoneLabel, type YMD } from '../lib/time';
 
@@ -72,6 +73,7 @@ export function DetailsForm({ config, date, start, locale, t, submitting, error,
           placeholder={t.name}
           aria-label={t.name}
           autoComplete="name"
+          maxLength={LIMITS.name}
           autoFocus
           value={details.name}
           onChange={set('name')}
@@ -82,6 +84,7 @@ export function DetailsForm({ config, date, start, locale, t, submitting, error,
           placeholder={t.email}
           aria-label={t.email}
           autoComplete="email"
+          maxLength={LIMITS.email}
           value={details.email}
           onChange={set('email')}
         />
@@ -90,6 +93,7 @@ export function DetailsForm({ config, date, start, locale, t, submitting, error,
           placeholder={t.notes}
           aria-label={t.notes}
           rows={3}
+          maxLength={LIMITS.notes}
           value={details.notes}
           onChange={set('notes')}
         />

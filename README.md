@@ -18,7 +18,8 @@ Inspired by [a design by @jonsouyang](https://x.com/jonsouyang/status/2105001165
 - **Night on the same photo.** Exposure and saturation drop with the sun, a colour cast is multiplied over the picture (orange at dusk, blue at night), stars and a moon appear, and the towers' floors light up.
 - **Smooth.** Hovering jumps around the timeline, but the light eases toward the target instead of snapping. It respects `prefers-reduced-motion`.
 - **Time-zone safe.** Everything is Madrid wall-clock time, converted with `Intl` (DST included), so it doesn't matter where the visitor's browser is.
-- **Accessible-ish by default.** Real buttons, ARIA roles, keyboard focus, `Esc` to go back.
+- **Keyboard friendly.** Real buttons, ARIA roles, visible focus, `Esc` to go back. (The time list is tabbable rather than arrow-key navigable.)
+- **Private.** No cookies, analytics, trackers, third-party fonts or CDNs. The only network call is the optional booking `POST` you configure.
 - **Bilingual.** Spanish and English, picked from the browser language.
 - **Tiny code.** React + Vite + TypeScript, no UI or date libraries (~78 kB gzipped, plus one 350 kB photo).
 
@@ -27,11 +28,11 @@ Inspired by [a design by @jonsouyang](https://x.com/jonsouyang/status/2105001165
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm test           # unit tests for the time zone, sun, sky and availability logic
+npm test           # unit tests for time zone, sun, sky, availability, .ics and booking logic
 npm run build      # static site in dist/
 ```
 
-Requires Node 20+.
+Requires Node 20+ (`.nvmrc` pins 22).
 
 ## Make it yours
 
@@ -51,7 +52,16 @@ and pass it to `createAvailability(config, yourProvider)` in `App.tsx`. Because 
 
 ### Receiving bookings
 
-There is no backend. On confirm, the app shows a success screen and offers an `.ics` download. To actually receive bookings, set `VITE_BOOKING_ENDPOINT` (see [`.env.example`](.env.example)) to any URL that accepts a JSON `POST` (a serverless function, Formspree, an n8n or Zapier webhook…). The payload is the `Booking` type in [`src/lib/booking.ts`](src/lib/booking.ts).
+There is no backend. On confirm, the app shows a success screen and offers an `.ics` download. To actually receive bookings, set `VITE_BOOKING_ENDPOINT` (see [`.env.example`](.env.example)) to an **https** URL that accepts a JSON `POST` (a serverless function, Formspree, an n8n or Zapier webhook…). The payload is the `Booking` type in [`src/lib/booking.ts`](src/lib/booking.ts).
+
+> **Heads-up:** this is a static site, so `VITE_*` values end up in the public JavaScript. Never put a secret in the endpoint URL, and validate and rate-limit on the receiving side. See [SECURITY.md](SECURITY.md).
+
+## Known limitations
+
+- Availability is **demo data** until you plug in a real provider.
+- Bookings go nowhere until you set an endpoint.
+- The photo is one fixed picture (a cloudy day) lit by simulation; the lit windows are a generated overlay.
+- Weekends and holidays follow `config.ts` only; there's no holiday calendar.
 
 ## How the light works
 
@@ -89,11 +99,11 @@ src/
 
 ## Deploy
 
-It's a static site. `npm run build` and upload `dist/` anywhere. The included workflow deploys to **GitHub Pages** on every push to `main` (enable it once under Settings → Pages → Source: GitHub Actions).
+It's a static site. `npm run build` and upload `dist/` anywhere. The included workflow deploys to **GitHub Pages** when you run it from the Actions tab (enable it once under Settings → Pages → Source: GitHub Actions). The production build ships a strict Content-Security-Policy.
 
 ## Contributing
 
-Ideas that would be great: other cities (a photo plus its `photo.ts` geometry and coordinates), an automatic skyline mask, a Google Calendar provider, weather-aware clouds, dark/light card themes. Open an issue or a PR; please run `npm run typecheck && npm test` first.
+Ideas that would be great: other cities (a photo plus its `photo.ts` geometry and coordinates), an automatic skyline mask, a Google Calendar provider, weather-aware clouds, dark/light card themes. See [CONTRIBUTING.md](CONTRIBUTING.md); please run `npm run typecheck && npm test` first. Security issues: [SECURITY.md](SECURITY.md).
 
 ## License
 

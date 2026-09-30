@@ -28,11 +28,15 @@ npm run build    # sitio estático en dist/
 Todo lo que querrás cambiar está en [`src/config.ts`](src/config.ts): tu nombre, duración y plataforma de la reunión, días y horas, antelación mínima, idioma…
 
 - **Disponibilidad real:** ahora mismo los bloques "ocupado" son de ejemplo. Implementa `AvailabilityProvider` en [`src/lib/availability.ts`](src/lib/availability.ts) para leer tu calendario real.
-- **Recibir reservas:** no hay backend. Define `VITE_BOOKING_ENDPOINT` (ver `.env.example`) con una URL que acepte un `POST` JSON (función serverless, Formspree, webhook de n8n o Zapier…).
+- **Recibir reservas:** no hay backend. Define `VITE_BOOKING_ENDPOINT` (ver `.env.example`) con una URL **https** que acepte un `POST` JSON (función serverless, Formspree, webhook de n8n o Zapier…).
+
+> **Ojo:** es un sitio estático, así que las variables `VITE_*` acaban en el JavaScript público. Nunca metas un secreto en esa URL y valida en el servidor que recibe los datos. Ver [SECURITY.md](SECURITY.md).
+>
+> **Limitaciones:** la disponibilidad es de ejemplo hasta que conectes tu calendario; las reservas no llegan a ningún sitio hasta que definas un endpoint; la foto es una sola, de un día nublado, con la luz simulada.
 
 ## Despliegue
 
-Es un sitio estático. El workflow incluido lo publica en **GitHub Pages** en cada push a `main` (actívalo en Settings → Pages → Source: GitHub Actions).
+Es un sitio estático. El workflow incluido lo publica en **GitHub Pages** cuando lo lanzas desde la pestaña Actions (actívalo antes en Settings → Pages → Source: GitHub Actions). El build de producción incluye una Content-Security-Policy estricta.
 
 ## Licencia
 

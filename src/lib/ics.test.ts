@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildIcs } from './ics';
+import { buildIcs, fold } from './ics';
 
 describe('buildIcs', () => {
   const ics = buildIcs(
@@ -20,5 +20,19 @@ describe('buildIcs', () => {
 
   it('escapes reserved characters', () => {
     expect(ics).toContain('SUMMARY:Call\\, with\; Jorge');
+  });
+});
+
+describe('fold', () => {
+  it('keeps every physical line within 75 octets', () => {
+    const line = 'DESCRIPTION:' + 'ñandú 🦩 '.repeat(40);
+    for (const physical of fold(line).split('\r\n')) {
+      expect(new TextEncoder().encode(physical).length).toBeLessThanOrEqual(75);
+    }
+  });
+
+  it('never splits a character and is lossless when unfolded', () => {
+    const line = 'SUMMARY:' + '🦩'.repeat(60);
+    expect(fold(line).replace(/\r\n /g, '')).toBe(line);
   });
 });

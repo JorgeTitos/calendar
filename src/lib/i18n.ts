@@ -1,4 +1,4 @@
-import { TIME_ZONE, dateKey, parseKey, type YMD } from './time';
+import type { YMD } from './time';
 
 export type Locale = 'es' | 'en';
 
@@ -34,7 +34,6 @@ export const dictionary = {
     error: 'Something went wrong. Please try again.',
     invalidEmail: 'Please enter a valid email.',
     nameRequired: 'Please tell me your name.',
-    now: 'Now',
   },
   es: {
     intro: (owner: string) => `Elige un día para ver cuándo está libre ${owner}.`,
@@ -67,7 +66,6 @@ export const dictionary = {
     error: 'Algo ha fallado. Inténtalo de nuevo.',
     invalidEmail: 'Introduce un email válido.',
     nameRequired: 'Dime tu nombre, por favor.',
-    now: 'Ahora',
   },
 } as const;
 
@@ -150,4 +148,3 @@ function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-export { TIME_ZONE, dateKey, parseKey };
