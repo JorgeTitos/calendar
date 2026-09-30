@@ -1,10 +1,8 @@
-# Publishes the site to GitHub Pages on every push to main.
-# One-time setup: repo Settings → Pages → Source: "GitHub Actions".
+# Publishes the site to GitHub Pages. Run it manually from the Actions tab.
+# One-time setup: Settings → Pages → Source: "GitHub Actions".
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -19,14 +17,17 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - run: npm run build

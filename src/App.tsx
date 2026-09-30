@@ -19,6 +19,12 @@ type Step = 'pick' | 'details' | 'done';
 
 const availability = createAvailability(config);
 
+/** `crypto.randomUUID` only exists in secure contexts (https / localhost). */
+const newId = () =>
+  typeof crypto.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+
 export default function App() {
   const locale = useMemo(() => detectLocale(config.locale), []);
   const t = dictionary[locale];
@@ -102,7 +108,7 @@ export default function App() {
     const start = madridToDate(date, slot);
     const end = new Date(start.getTime() + config.meeting.durationMinutes * 60_000);
     const ics = buildIcs({
-      uid: `${crypto.randomUUID()}@madrid-booking-calendar`,
+      uid: `${newId()}@madrid-booking-calendar`,
       start,
       end,
       summary: `${config.meeting.durationMinutes} min · ${config.owner}`,
