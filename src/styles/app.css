@@ -3,7 +3,7 @@
   --ink-soft: rgb(255 255 255 / 0.62);
   --ink-faint: rgb(255 255 255 / 0.36);
   --hairline: rgb(255 255 255 / 0.12);
-  --glass: rgb(16 18 26 / 0.42);
+  --glass: rgb(14 16 24 / 0.5);
   --card-w: 296px;
   --timeline-w: 308px;
   color-scheme: dark;
@@ -241,6 +241,7 @@ h1, h2, h3, p, dl, dd { margin: 0; }
   .clock { top: 14px; right: 20px; }
   .clock-time { font-size: 72px; }
   .clock-date { font-size: 13px; }
+  :root { --glass: rgb(14 16 24 / 0.72); }
 
   .card, .card.open, .card.step-done {
     top: auto; bottom: 12px; left: 12px; right: 12px; width: auto;
