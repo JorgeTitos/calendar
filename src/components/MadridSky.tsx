@@ -1,6 +1,6 @@
 import { memo, type CSSProperties } from 'react';
 import type { Sky } from '../lib/sky';
-import { GROUND_Y, VIEW, lampHeads, skylineData as s } from '../lib/skyline';
+import { VIEW, cristalLed, skylineData as s, towers } from '../lib/skyline';
 
 const sunX = (azimuth: number) => VIEW.width / 2 + (azimuth - 180) * 6.4;
 const bodyY = (elevation: number) => 700 - elevation * 9;
@@ -42,24 +42,30 @@ const Scenery = memo(function Scenery() {
 const Skyline = memo(function Skyline() {
   return (
     <>
-      <path d={s.far} className="layer-far" />
-      <path d={s.cuatroTorres} className="layer-far tower" />
+      <path d={s.mountains.far} className="mountain-far" />
+      <path d={s.mountains.near} className="mountain-near" />
 
       <path d={s.back} className="layer-back" />
       <path d={s.backWindows} className="windows" />
-      <path d={s.metropolis} className="landmark" />
-      <path d={s.metropolisWindows} className="windows" />
+
+      {towers.map((tower) => (
+        <g key={tower.name}>
+          <path d={tower.d} className="tower" />
+          <path d={tower.d} fill="url(#glass)" opacity="0.6" />
+          <path d={tower.d} fill="url(#floor-lines)" />
+          {tower.name === 'cepsa' && (
+            <rect x={tower.x + 58} y="162" width="34" height="738" className="gold" />
+          )}
+          <path d={tower.lit} className="windows" />
+          <path d={tower.crown} className="tower" />
+          <rect x={tower.x + tower.width - 4} y={tower.rimTop} width="4" height={900 - tower.rimTop} className="rim" />
+        </g>
+      ))}
+      <path d={cristalLed} className="led" />
+
       <path d={s.mid} className="layer-mid" />
       <path d={s.midWindows} className="windows" />
-
-      <path d={`M0 ${GROUND_Y}H${VIEW.width}V${VIEW.height}H0Z`} className="layer-ground" />
-      <path d={s.trees} className="layer-tree" />
-      <path d={s.lamps} className="layer-near" />
-      {lampHeads.map((l) => (
-        <circle key={l.x} cx={l.x} cy={l.y} r="4" className="lamp" />
-      ))}
-      <path d={s.puertaBody} className="layer-near" fillRule="evenodd" />
-      <path d={s.puertaTop} className="layer-near" />
+      <path d={s.front} className="layer-near" />
     </>
   );
 });
@@ -74,14 +80,12 @@ export function MadridSky({ sky }: { sky: Sky }) {
     '--far': look.far,
     '--mid': look.mid,
     '--near': look.near,
-    '--ground': look.ground,
-    '--tree': look.tree,
     '--cloud': look.cloud,
     '--sun': look.sun,
     '--sun-glow': look.sunGlow,
     '--stars': look.stars,
     '--windows': look.windows,
-    '--lamp': look.windows,
+    '--glow': look.sunGlowOpacity,
   } as CSSProperties;
 
   return (
@@ -106,6 +110,13 @@ export function MadridSky({ sky }: { sky: Sky }) {
             <stop offset="0" stopColor="#dfe8ff" stopOpacity="0.35" />
             <stop offset="1" stopColor="#dfe8ff" stopOpacity="0" />
           </radialGradient>
+          <linearGradient id="glass" gradientUnits="userSpaceOnUse" x1="0" y1="120" x2="0" y2="800">
+            <stop offset="0" className="stop-mid" stopOpacity="0.15" />
+            <stop offset="1" className="stop-horizon" stopOpacity="0.95" />
+          </linearGradient>
+          <pattern id="floor-lines" width="10" height="12" patternUnits="userSpaceOnUse">
+            <rect y="11" width="10" height="1" fill="#fff" opacity="0.09" />
+          </pattern>
           <radialGradient id="cloud-gradient">
             <stop offset="0" className="stop-cloud" stopOpacity="0.6" />
             <stop offset="1" className="stop-cloud" stopOpacity="0" />

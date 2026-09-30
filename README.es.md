@@ -1,6 +1,6 @@
 # Madrid Booking Calendar
 
-Un calendario de reservas donde **el cielo de Madrid cambia según la hora que eliges**. Recorre el día y verás amanecer, un mediodía azul, un atardecer naranja sobre la Puerta de Alcalá y una noche estrellada con las ventanas encendidas.
+Un calendario de reservas donde **el cielo de Madrid cambia según la hora que eliges**. Recorre el día y verás amanecer, un mediodía azul, un atardecer naranja tras las Cuatro Torres y una noche estrellada con las ventanas encendidas.
 
 Inspirado en [un diseño de @jonsouyang](https://x.com/jonsouyang/status/2105001165960466617). Es una versión independiente, hecha desde cero y de código abierto: la misma idea, pero con Madrid, y toda la escena dibujada con código.
 
@@ -8,7 +8,7 @@ Inspirado en [un diseño de @jonsouyang](https://x.com/jonsouyang/status/2105001
 
 ## Qué lo hace especial
 
-- **Sin fotos ni licencias.** El skyline (Edificio Metrópolis, Puerta de Alcalá, Cuatro Torres y cientos de tejados) es un SVG procedural generado con una semilla fija. No se descarga nada.
+- **Sin fotos ni licencias.** El skyline (las Cuatro Torres, la Sierra de Guadarrama al fondo y cientos de tejados) es un SVG procedural generado con una semilla fija. No se descarga nada.
 - **Un cielo real, no una presentación.** Para la fecha y hora que señalas se calcula la posición real del sol sobre Madrid y de ahí se interpola la paleta. El atardecer del 30 de septiembre no cae a la misma hora que el del 21 de diciembre.
 - **Fluido.** El cielo se desliza hacia la hora elegida en vez de saltar, y respeta `prefers-reduced-motion`.
 - **Sin líos de zona horaria.** Todo se calcula en hora de Madrid (con cambio horario incluido), estés donde estés.

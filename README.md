@@ -1,6 +1,6 @@
 # Madrid Booking Calendar
 
-A booking calendar where **the sky over Madrid follows the time you pick**. Slide down the day and watch it go from dawn, to blue noon, to an orange sunset over the Puerta de Alcalá, to a starry night with the windows lit.
+A booking calendar where **the sky over Madrid follows the time you pick**. Slide down the day and watch it go from dawn, to blue noon, to an orange sunset behind the Cuatro Torres, to a starry night with the windows lit.
 
 Inspired by [a design by @jonsouyang](https://x.com/jonsouyang/status/2105001165960466617). This is an independent, from-scratch open-source take: same idea, but the city is Madrid, and the whole scene is drawn in code.
 
@@ -12,7 +12,7 @@ Inspired by [a design by @jonsouyang](https://x.com/jonsouyang/status/2105001165
 
 ## What makes it tick
 
-- **No photos, no licences.** The skyline (Edificio Metrópolis, Puerta de Alcalá, Cuatro Torres, a few hundred rooftops) is a procedural SVG generated from a seeded random function. Nothing is downloaded; the picture is identical on every load.
+- **No photos, no licences.** The skyline (the four towers of the Cuatro Torres Business Area, the Sierra de Guadarrama behind them, and a few hundred rooftops) is a procedural SVG generated from a seeded random function. Nothing is downloaded; the picture is identical on every load.
 - **A real sky, not a slideshow.** For the date and time you hover, we compute the sun's actual elevation and azimuth over Madrid (`src/lib/sun.ts`) and interpolate a palette from it (`src/lib/sky.ts`). Sunset on 30 September is at a different hour than on 21 December, and the moon rises opposite the sun.
 - **Smooth.** Hovering jumps around the timeline, but the sky eases toward the target instead of snapping. It respects `prefers-reduced-motion`.
 - **Time-zone safe.** Everything is Madrid wall-clock time, converted with `Intl` (DST included), so it doesn't matter where the visitor's browser is.

@@ -23,15 +23,16 @@
 .sky .star { fill: #fff; }
 .sky .sky-stars { opacity: var(--stars); }
 .sky .cloud { fill: url(#cloud-gradient); }
-.sky .layer-far { fill: var(--far); }
+.sky .mountain-far { fill: color-mix(in srgb, var(--mid), var(--sky-horizon) 32%); }
+.sky .mountain-near { fill: color-mix(in srgb, var(--mid), var(--sky-horizon) 12%); }
 .sky .layer-back { fill: color-mix(in srgb, var(--mid), var(--far) 55%); }
 .sky .layer-mid { fill: var(--mid); }
-.sky .landmark { fill: color-mix(in srgb, var(--mid), var(--near) 50%); }
 .sky .layer-near { fill: var(--near); }
-.sky .layer-ground { fill: var(--ground); }
-.sky .layer-tree { fill: var(--tree); }
+.sky .tower { fill: color-mix(in srgb, var(--mid), var(--near) 55%); }
+.sky .gold { fill: #e6c98c; opacity: calc(0.22 - var(--windows) * 0.16); }
+.sky .rim { fill: var(--sun-glow); opacity: calc(var(--glow) * 0.55); }
 .sky .windows { fill: #ffd58a; opacity: var(--windows); }
-.sky .lamp { fill: #ffd58a; opacity: var(--lamp); }
+.sky .led { fill: #8dffb0; opacity: var(--windows); }
 
 /* Subtle vignette so the white clock stays legible in bright daylight. */
 .sky-scrim {
