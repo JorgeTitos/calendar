@@ -4,21 +4,21 @@ import { madridToDate, type YMD } from './time';
 /** Puerta del Sol, Madrid. */
 export const MADRID = { latitude: 40.4168, longitude: -3.7038 } as const;
 
-/** Everything the skyline needs to know to look right at one moment. */
+/** How the photograph should be lit at one moment. */
 export interface SkyLook {
-  skyTop: string;
-  skyMid: string;
-  skyHorizon: string;
-  /** Distant hazy layer (Cuatro Torres, far rooftops). */
-  far: string;
-  mid: string;
-  near: string;
-  cloud: string;
+  /** Brightness multiplier applied to the photo itself. */
+  exposure: number;
+  saturation: number;
+  /** Colour cast, multiplied over the photo from top to horizon. */
+  tintTop: string;
+  tintHorizon: string;
+  /** How strongly the colour cast applies (0 = the untouched photo). */
+  grade: number;
   sun: string;
   sunGlow: string;
+  sunGlowOpacity: number; // 0–1
   stars: number; // 0–1
   windows: number; // 0–1, how many lights are on
-  sunGlowOpacity: number; // 0–1
 }
 
 type Rgb = [number, number, number];
@@ -27,13 +27,11 @@ type ColorKey = {
 }[keyof SkyLook];
 type NumberKey = Exclude<keyof SkyLook, ColorKey>;
 
-const COLOR_KEYS: ColorKey[] = [
-  'skyTop', 'skyMid', 'skyHorizon', 'far', 'mid', 'near', 'cloud', 'sun', 'sunGlow',
-];
-const NUMBER_KEYS: NumberKey[] = ['stars', 'windows', 'sunGlowOpacity'];
+const COLOR_KEYS: ColorKey[] = ['tintTop', 'tintHorizon', 'sun', 'sunGlow'];
+const NUMBER_KEYS: NumberKey[] = ['exposure', 'saturation', 'grade', 'sunGlowOpacity', 'stars', 'windows'];
 
 /**
- * Palette keyframes, indexed by the sun's elevation in degrees.
+ * Lighting keyframes, indexed by the sun's elevation in degrees.
  * Using the sun (not the clock) means sunrise and sunset land at the right
  * hour for the selected date: a September evening is not a December one.
  */
@@ -41,64 +39,50 @@ const KEYFRAMES: Array<{ at: number; look: SkyLook }> = [
   {
     at: -18,
     look: {
-      skyTop: '#03050d', skyMid: '#070c1c', skyHorizon: '#101a33',
-      far: '#0d1428', mid: '#090e1c', near: '#05070f',
-      cloud: '#1a2140', sun: '#ffb060', sunGlow: '#ff8a3c',
-      stars: 1, windows: 1, sunGlowOpacity: 0,
+      exposure: 0.62, saturation: 0.6, tintTop: '#101c48', tintHorizon: '#26386e', grade: 0.86,
+      sun: '#ffb060', sunGlow: '#ff8a3c', sunGlowOpacity: 0, stars: 1, windows: 1,
     },
   },
   {
     at: -12,
     look: {
-      skyTop: '#0a1030', skyMid: '#262a5a', skyHorizon: '#4a3a6e',
-      far: '#1c2044', mid: '#141833', near: '#0a0c1c',
-      cloud: '#3a3468', sun: '#ffb060', sunGlow: '#ff8a3c',
-      stars: 0.55, windows: 1, sunGlowOpacity: 0.1,
+      exposure: 0.7, saturation: 0.8, tintTop: '#2a3270', tintHorizon: '#71508c', grade: 0.82,
+      sun: '#ffb060', sunGlow: '#ff8a3c', sunGlowOpacity: 0.1, stars: 0.55, windows: 1,
     },
   },
   {
     at: -6,
     look: {
-      skyTop: '#1a2a5e', skyMid: '#5b4a86', skyHorizon: '#e0785a',
-      far: '#4a3a70', mid: '#2e2758', near: '#15132b',
-      cloud: '#e8907a', sun: '#ff9a4a', sunGlow: '#ff7a3a',
-      stars: 0.08, windows: 0.85, sunGlowOpacity: 0.55,
+      exposure: 0.82, saturation: 1.05, tintTop: '#6a58a0', tintHorizon: '#ff8a5c', grade: 0.78,
+      sun: '#ff9a4a', sunGlow: '#ff7a3a', sunGlowOpacity: 0.55, stars: 0.06, windows: 0.4,
     },
   },
   {
     at: -1,
     look: {
-      skyTop: '#2c4a80', skyMid: '#c98a7c', skyHorizon: '#ffa860',
-      far: '#7a5a78', mid: '#4f3d60', near: '#251d33',
-      cloud: '#ffb088', sun: '#ffa850', sunGlow: '#ff8c3c',
-      stars: 0, windows: 0.5, sunGlowOpacity: 1,
+      exposure: 0.9, saturation: 1.25, tintTop: '#d68f88', tintHorizon: '#ffb070', grade: 0.7,
+      sun: '#ffa850', sunGlow: '#ff8c3c', sunGlowOpacity: 1, stars: 0, windows: 0.1,
     },
   },
   {
-    at: 4,
+    at: 5,
     look: {
-      skyTop: '#4a7fb5', skyMid: '#eab48a', skyHorizon: '#ffd08a',
-      far: '#9a8a9a', mid: '#75697a', near: '#3c3546',
-      cloud: '#ffe0b8', sun: '#ffd28a', sunGlow: '#ffb060',
-      stars: 0, windows: 0.12, sunGlowOpacity: 0.85,
+      exposure: 1, saturation: 1.15, tintTop: '#f0c8a4', tintHorizon: '#ffd8a0', grade: 0.5,
+      sun: '#ffd28a', sunGlow: '#ffb060', sunGlowOpacity: 0.85, stars: 0, windows: 0,
     },
   },
   {
-    at: 14,
+    at: 16,
     look: {
-      skyTop: '#4c8ad0', skyMid: '#93c1e8', skyHorizon: '#f0e3cf',
-      far: '#a9b7c9', mid: '#8896aa', near: '#56626f',
-      cloud: '#ffffff', sun: '#fff3d0', sunGlow: '#ffe6a8',
-      stars: 0, windows: 0, sunGlowOpacity: 0.5,
+      exposure: 1.03, saturation: 1.08, tintTop: '#f6eee0', tintHorizon: '#fff4e0', grade: 0.2,
+      sun: '#fff3d0', sunGlow: '#ffe6a8', sunGlowOpacity: 0.6, stars: 0, windows: 0,
     },
   },
   {
     at: 35,
     look: {
-      skyTop: '#3b82d6', skyMid: '#86bdec', skyHorizon: '#d5eaf8',
-      far: '#adc1d6', mid: '#8a9fb6', near: '#5a6b7d',
-      cloud: '#ffffff', sun: '#fffbe8', sunGlow: '#fff2c4',
-      stars: 0, windows: 0, sunGlowOpacity: 0.35,
+      exposure: 1.06, saturation: 1.12, tintTop: '#ffffff', tintHorizon: '#ffffff', grade: 0,
+      sun: '#fffbe8', sunGlow: '#fff2c4', sunGlowOpacity: 0.55, stars: 0, windows: 0,
     },
   },
 ];

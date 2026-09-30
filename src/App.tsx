@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Clock } from './components/Clock';
 import { DayTimeline } from './components/DayTimeline';
 import { DetailsForm, type Details } from './components/DetailsForm';
-import { MadridSky } from './components/MadridSky';
+import { PhotoSky } from './components/PhotoSky';
 import { MonthCalendar } from './components/MonthCalendar';
 import { config } from './config';
 import { useEased } from './hooks/useEased';
@@ -126,7 +126,7 @@ export default function App() {
 
   return (
     <>
-      <MadridSky sky={sky} />
+      <PhotoSky sky={sky} />
 
       {config.homeUrl && (
         <a className="home" href={config.homeUrl}>

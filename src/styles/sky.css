@@ -2,10 +2,23 @@
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background: var(--sky-top);
+  background: #0a1024;
+  isolation: isolate;
 }
 
-.sky svg {
+/* The stage has the photo's exact aspect ratio and is sized to cover the screen,
+   anchored bottom-right. Photo and overlays are all 100% of it, so they can't drift. */
+.sky .stage {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: max(100vw, calc(100dvh * 2400 / 1241));
+  aspect-ratio: 2400 / 1241;
+  isolation: isolate;
+}
+
+.sky .photo,
+.sky .layer {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -13,43 +26,44 @@
   display: block;
 }
 
-.sky .stop-top { stop-color: var(--sky-top); }
-.sky .stop-mid { stop-color: var(--sky-mid); }
-.sky .stop-horizon { stop-color: var(--sky-horizon); }
-.sky .stop-glow { stop-color: var(--sun-glow); }
-.sky .stop-cloud { stop-color: var(--cloud); }
+.sky .photo { filter: brightness(var(--exposure)) saturate(var(--saturation)); }
 
-.sky .sun-disc { fill: var(--sun); }
+.sky .multiply { mix-blend-mode: multiply; }
+.sky .screen { mix-blend-mode: screen; }
+
 .sky .star { fill: #fff; }
-.sky .sky-stars { opacity: var(--stars); }
-.sky .cloud { fill: url(#cloud-gradient); }
-.sky .mountain-far { fill: color-mix(in srgb, var(--mid), var(--sky-horizon) 32%); }
-.sky .mountain-near { fill: color-mix(in srgb, var(--mid), var(--sky-horizon) 12%); }
-.sky .layer-back { fill: color-mix(in srgb, var(--mid), var(--far) 55%); }
-.sky .layer-mid { fill: var(--mid); }
-.sky .layer-near { fill: var(--near); }
-.sky .tower { fill: color-mix(in srgb, var(--mid), var(--near) 55%); }
-.sky .gold { fill: #e6c98c; opacity: calc(0.22 - var(--windows) * 0.16); }
-.sky .rim { fill: var(--sun-glow); opacity: calc(var(--glow) * 0.55); }
-.sky .windows { fill: #ffd58a; opacity: var(--windows); }
-.sky .led { fill: #8dffb0; opacity: var(--windows); }
+.sky .lights-towers { fill: #ffd890; opacity: calc(var(--windows) * 0.85); }
+.sky .lights-blocks { fill: #ffcf7a; opacity: calc(var(--windows) * 0.55); }
 
-/* Subtle vignette so the white clock stays legible in bright daylight. */
+/* A soft vignette so the white clock stays legible in bright daylight. */
 .sky-scrim {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(to bottom, rgb(0 0 0 / 0.22), transparent 38%),
-    radial-gradient(120% 90% at 50% 100%, transparent 55%, rgb(0 0 0 / 0.25));
+    linear-gradient(to bottom, rgb(0 0 0 / 0.26), transparent 36%),
+    radial-gradient(120% 90% at 50% 100%, transparent 60%, rgb(0 0 0 / 0.22));
 }
+
+.credit {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+  font-size: 10px;
+  color: rgb(255 255 255 / 0.6);
+  text-decoration: none;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.5);
+}
+.credit:hover { color: #fff; text-decoration: underline; }
 
 @media (prefers-reduced-motion: no-preference) {
   .sky .twinkle { animation: twinkle 5s ease-in-out infinite; }
-  .sky .drift-a { animation: drift-a 90s ease-in-out infinite alternate; }
-  .sky .drift-b { animation: drift-b 120s ease-in-out infinite alternate; }
 }
 
 @keyframes twinkle { 50% { opacity: 0.25; } }
-@keyframes drift-a { to { transform: translateX(80px); } }
-@keyframes drift-b { to { transform: translateX(-100px); } }
+
+@media (max-width: 760px) {
+  /* Portrait: centre the stage on the four towers instead of the right edge. */
+  .sky .stage { right: auto; left: 50%; transform: translateX(-63%); }
+  .credit { bottom: 1px; left: 12px; right: auto; font-size: 8.5px; }
+}
